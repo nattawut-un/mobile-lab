@@ -82,6 +82,10 @@ function MealsNavigator() {
 }
 
 function FavNavigator() {
+  const favIds = useSelector(state => state.meals.favoriteMeals).map(i => i.id)
+  const dispatch = useDispatch()
+  const toggleFavoriteHandler = mealId => dispatch(toggleFavorite(mealId))
+
   return (
     <Fav.Navigator
       initialRouteName="Fav"
@@ -96,6 +100,21 @@ function FavNavigator() {
         component={MealDetailScreen}
         options={({ route }) => ({
           title: route.params.mealDetails.title,
+          headerRight: () => (
+            <HeaderButtons HeaderButtonComponent={FavoriteButton}>
+              <Item
+                title="Tab_1"
+                iconName={
+                  favIds.includes(route.params.mealDetails.id)
+                    ? 'ios-star'
+                    : 'ios-star-outline'
+                }
+                onPress={() =>
+                  toggleFavoriteHandler(route.params.mealDetails.id)
+                }
+              />
+            </HeaderButtons>
+          ),
         })}
       />
     </Fav.Navigator>
